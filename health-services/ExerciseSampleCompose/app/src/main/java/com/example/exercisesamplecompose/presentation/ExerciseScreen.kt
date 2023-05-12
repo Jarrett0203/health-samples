@@ -22,10 +22,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DirectionsRun
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.filled.WatchLater
@@ -58,6 +60,8 @@ import com.example.exercisesamplecompose.data.ServiceState
 import com.example.exercisesamplecompose.presentation.component.CaloriesText
 import com.example.exercisesamplecompose.presentation.component.DistanceText
 import com.example.exercisesamplecompose.presentation.component.HRText
+import com.example.exercisesamplecompose.presentation.component.SpeedText
+import com.example.exercisesamplecompose.presentation.component.StepsText
 import com.example.exercisesamplecompose.presentation.component.formatCalories
 import com.example.exercisesamplecompose.presentation.component.formatDistanceKm
 import com.example.exercisesamplecompose.presentation.component.formatElapsedTime
@@ -116,6 +120,12 @@ fun ExerciseScreen(
             val calories =
                 exerciseMetrics?.getData(DataType.CALORIES_TOTAL)?.total
             val tempCalories = remember { mutableStateOf(0.0) }
+
+            val steps = exerciseMetrics?.getData(DataType.STEPS_TOTAL)?.total?.toInt()
+            val tempSteps = remember { mutableStateOf(0) }
+
+            val speed = exerciseMetrics?.getData(DataType.SPEED_STATS)?.average
+            val tempSpeed = remember { mutableStateOf(0.0) }
 
             val averageHeartRate =
                 exerciseMetrics?.getData(DataType.HEART_RATE_BPM_STATS)?.average
@@ -240,6 +250,40 @@ fun ExerciseScreen(
                             } else {
                                 DistanceText(
                                     tempDistance.value
+                                )
+                            }
+                            Icon(
+                                imageVector = Icons.Default.Speed,
+                                contentDescription = stringResource(id = R.string.speed)
+                            )
+                            if (speed != null) {
+                                SpeedText(
+                                    speed
+                                )
+                                tempSpeed.value = speed
+                            } else {
+                                SpeedText(
+                                    tempSpeed.value
+                                )
+                            }
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.DirectionsRun,
+                                contentDescription = stringResource(id = R.string.steps)
+                            )
+                            if (steps != null) {
+                                StepsText(
+                                    steps
+                                )
+                                tempSteps.value = steps
+                            } else {
+                                StepsText(
+                                    tempSteps.value
                                 )
                             }
                             Icon(

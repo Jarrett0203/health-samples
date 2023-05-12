@@ -63,3 +63,17 @@ fun formatDistanceKm(meters: Double) = buildSpannedString {
         append("km")
     }
 }
+
+fun formatSteps(steps: Int) = buildSpannedString {
+    append(steps.toString())
+    inSpans(RelativeSizeSpan(UNITS_RELATIVE_SIZE)) {
+        append(" steps")
+    }
+}
+
+fun formatSpeed(speed: Double) = buildSpannedString {
+    append("%02.2f".format(speed * 3.6))
+    inSpans(RelativeSizeSpan(UNITS_RELATIVE_SIZE)) {
+        append("km/h")
+    }
+}

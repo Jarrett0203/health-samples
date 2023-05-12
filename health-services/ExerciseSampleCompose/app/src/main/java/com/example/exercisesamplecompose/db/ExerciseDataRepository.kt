@@ -42,8 +42,8 @@ class ExerciseDataRepository(
                             ?: prevExerciseData?.heartRateAvg,
                         steps = exerciseUpdate.latestMetrics.getData(DataType.STEPS_TOTAL)?.total?.toInt()
                             ?: prevExerciseData?.steps,
-                        speed = exerciseUpdate.latestMetrics.getData(DataType.SPEED_STATS)?.average
-                            ?: prevExerciseData?.speed,
+                        speed = exerciseUpdate.latestMetrics.getData(DataType.SPEED_STATS)?.average?.times(
+                            3.6) ?: prevExerciseData?.speed // Convert m/s to km/h
                     )
                     exerciseDataDao.upsertExerciseData(exerciseData)
                 }
