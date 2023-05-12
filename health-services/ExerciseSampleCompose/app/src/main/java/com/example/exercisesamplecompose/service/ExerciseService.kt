@@ -43,6 +43,8 @@ import com.example.exercisesamplecompose.MainActivity
 import com.example.exercisesamplecompose.R
 import com.example.exercisesamplecompose.data.ExerciseClientManager
 import com.example.exercisesamplecompose.data.ExerciseMessage
+import com.example.exercisesamplecompose.db.ExerciseDataDatabase
+import com.example.exercisesamplecompose.db.ExerciseDataRepository
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Duration
 import java.time.Instant
@@ -85,6 +87,7 @@ class ForegroundService : LifecycleService() {
     private val _exerciseServiceState = MutableStateFlow(ExerciseServiceState())
     val exerciseServiceState: StateFlow<ExerciseServiceState> = _exerciseServiceState.asStateFlow()
 
+    private lateinit var exerciseDataRepository: ExerciseDataRepository
 
     private suspend fun isExerciseInProgress() = exerciseClientManager.isExerciseInProgress()
 
@@ -272,7 +275,18 @@ class ForegroundService : LifecycleService() {
                 })
         }
         lastActiveDurationCheckpoint = exerciseUpdate.activeDurationCheckpoint
-
+        when {
+            exerciseUpdate.exerciseStateInfo.state == ExerciseState.ACTIVE ->
+                lifecycleScope.launch {
+                    exerciseDataRepository.startSavingData(exerciseUpdate)
+                }
+            exerciseUpdate.exerciseStateInfo.state.isPaused ->
+                    exerciseDataRepository.pauseSavingData()
+            exerciseUpdate.exerciseStateInfo.state.isResuming ->
+                exerciseDataRepository.resumeSavingData()
+            exerciseUpdate.exerciseStateInfo.state.isEnded || exerciseUpdate.exerciseStateInfo.state.isEnding ->
+                exerciseDataRepository.stopSavingData()
+        }
     }
 
 
@@ -285,6 +299,13 @@ class ForegroundService : LifecycleService() {
     override fun onRebind(intent: Intent?) {
         super.onRebind(intent)
         handleBind()
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        exerciseDataRepository = ExerciseDataRepository(
+            ExerciseDataDatabase.getInstance(applicationContext).exerciseStateDao()
+        )
     }
 
     private fun handleBind() {

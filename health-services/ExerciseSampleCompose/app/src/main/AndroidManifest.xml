@@ -57,6 +57,6 @@
         <service
             android:name=".service.ForegroundService"
             android:exported="false"
-            android:foregroundServiceType="location" />
+            android:foregroundServiceType="dataSync|location|connectedDevice" />
     </application>
 </manifest>
