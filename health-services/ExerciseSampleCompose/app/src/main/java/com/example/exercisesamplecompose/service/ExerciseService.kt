@@ -278,14 +278,24 @@ class ForegroundService : LifecycleService() {
         when {
             exerciseUpdate.exerciseStateInfo.state == ExerciseState.ACTIVE ->
                 lifecycleScope.launch {
+                    Log.d(TAG, "saveData")
                     exerciseDataRepository.startSavingData(exerciseUpdate)
                 }
-            exerciseUpdate.exerciseStateInfo.state.isPaused ->
-                    exerciseDataRepository.pauseSavingData()
-            exerciseUpdate.exerciseStateInfo.state.isResuming ->
+
+            exerciseUpdate.exerciseStateInfo.state.isPaused -> {
+                Log.d(TAG, "pauseData")
+                exerciseDataRepository.pauseSavingData()
+            }
+
+            exerciseUpdate.exerciseStateInfo.state.isResuming -> {
+                Log.d(TAG, "resumeData")
                 exerciseDataRepository.resumeSavingData()
-            exerciseUpdate.exerciseStateInfo.state.isEnded || exerciseUpdate.exerciseStateInfo.state.isEnding ->
+            }
+
+            exerciseUpdate.exerciseStateInfo.state.isEnded || exerciseUpdate.exerciseStateInfo.state.isEnding -> {
+                Log.d(TAG, "stopData")
                 exerciseDataRepository.stopSavingData()
+            }
         }
     }
 
@@ -304,7 +314,7 @@ class ForegroundService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
         exerciseDataRepository = ExerciseDataRepository(
-            ExerciseDataDatabase.getInstance(applicationContext).exerciseStateDao()
+            ExerciseDataDatabase.getInstance(applicationContext).exerciseStateDao(), lifecycleScope
         )
     }
 

@@ -176,7 +176,7 @@ fun ExerciseScreen(
                         exerciseStateChange as ExerciseStateChange.ActiveStateChange
                     val timeOffset =
                         (System.currentTimeMillis() -
-                            activeStateChange.durationCheckPoint.time.toEpochMilli())
+                                activeStateChange.durationCheckPoint.time.toEpochMilli())
                     baseActiveDuration.value =
                         activeStateChange.durationCheckPoint.activeDuration.plusMillis(timeOffset)
                     chronoTickJob.value = startTick(chronoTickJob.value, scope) { tickerTime ->
@@ -304,7 +304,9 @@ fun ExerciseScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            if (exerciseStateChange.exerciseState.isEnding) {
+                            if ((exerciseStateChange.exerciseState.isEnded || exerciseStateChange.exerciseState.isEnding) && activeDuration.toKotlinDuration()
+                                    .isPositive()
+                            ) {
 
                                 //In a production fitness app, you might upload workout metrics to your app
                                 // either via network connection or to your mobile app via the Data Layer API.
@@ -313,7 +315,9 @@ fun ExerciseScreen(
                                         formatDistanceKm(
                                             tempDistance.value
                                         )
-                                    }/${formatCalories(tempCalories.value)}/" + formatElapsedTime(
+                                    }/${formatCalories(tempCalories.value)}/${tempSteps.value}/${
+                                        "%02.2f".format(tempSpeed.value * 3.6)
+                                    }/" + formatElapsedTime(
                                         activeDuration.toKotlinDuration(), true
                                     ).toString()
                                 ) { popUpTo(Screens.ExerciseScreen.route) { inclusive = true } }

@@ -97,15 +97,19 @@ fun ExerciseSampleApp(
             ExerciseNotAvailable()
         }
         composable(
-            Screens.SummaryScreen.route + "/{averageHeartRate}/{totalDistance}/{totalCalories}/{elapsedTime}",
+            Screens.SummaryScreen.route + "/{averageHeartRate}/{totalDistance}/{totalCalories}/{totalSteps}/{averageSpeed}/{elapsedTime}",
             arguments = listOf(navArgument("averageHeartRate") { type = NavType.StringType },
                 navArgument("totalDistance") { type = NavType.StringType },
                 navArgument("totalCalories") { type = NavType.StringType },
+                navArgument("totalSteps") { type = NavType.StringType },
+                navArgument("averageSpeed") { type = NavType.StringType },
                 navArgument("elapsedTime") { type = NavType.StringType })
         ) {
             SummaryScreen(averageHeartRate = it.arguments?.getString("averageHeartRate")!!,
                 totalDistance = it.arguments?.getString("totalDistance")!!,
                 totalCalories = it.arguments?.getString("totalCalories")!!,
+                totalSteps = it.arguments?.getString("totalSteps")!!,
+                averageSpeed = it.arguments?.getString("averageSpeed")!!,
                 elapsedTime = it.arguments?.getString("elapsedTime")!!,
                 onRestartClick = {
                     navController.navigate(Screens.StartingUp.route) {

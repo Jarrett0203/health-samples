@@ -57,6 +57,8 @@ fun SummaryScreen(
     averageHeartRate: String,
     totalDistance: String,
     totalCalories: String,
+    totalSteps: String,
+    averageSpeed: String,
     elapsedTime: String,
     onRestartClick: () -> Unit
 ) {
@@ -116,6 +118,20 @@ fun SummaryScreen(
                     )
                 }
                 item {
+                    SummaryFormat(
+                        value = totalSteps,
+                        metric = stringResource(id = R.string.steps),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                item {
+                    SummaryFormat(
+                        value = averageSpeed,
+                        metric = stringResource(id = R.string.speed),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                item {
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         modifier = Modifier
@@ -145,7 +161,9 @@ fun SummaryScreenPreview() {
     SummaryScreen(averageHeartRate = "75.0",
         totalDistance = "2 km",
         totalCalories = "100",
-        elapsedTime = "17m01",
+        totalSteps = "2000",
+        averageSpeed = "5.0",
+        elapsedTime = "17m01s",
         onRestartClick = {})
 
 
