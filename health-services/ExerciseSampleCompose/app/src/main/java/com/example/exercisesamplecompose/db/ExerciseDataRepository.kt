@@ -28,6 +28,13 @@ class ExerciseDataRepository(
                     }
                     val locationDataList = exerciseUpdate.latestMetrics.getData(DataType.LOCATION)
                     val currentLocationData = locationDataList.lastOrNull()?.value
+                    val heartRate: Double? =
+                        if (exerciseUpdate.latestMetrics.getData(DataType.HEART_RATE_BPM).isNotEmpty()) {
+                            exerciseUpdate.latestMetrics.getData(DataType.HEART_RATE_BPM)
+                                .last().value
+                        } else {
+                            prevExerciseData?.heartRate
+                        }
                     val exerciseData = ExerciseData(
                         startTime = exerciseUpdate.startTime,
                         updateTime = System.currentTimeMillis(),
@@ -38,12 +45,14 @@ class ExerciseDataRepository(
                             ?: prevExerciseData?.distance,
                         calories = exerciseUpdate.latestMetrics.getData(DataType.CALORIES_TOTAL)?.total
                             ?: prevExerciseData?.calories,
+                        heartRate = heartRate,
                         heartRateAvg = exerciseUpdate.latestMetrics.getData(DataType.HEART_RATE_BPM_STATS)?.average
                             ?: prevExerciseData?.heartRateAvg,
                         steps = exerciseUpdate.latestMetrics.getData(DataType.STEPS_TOTAL)?.total?.toInt()
                             ?: prevExerciseData?.steps,
                         speed = exerciseUpdate.latestMetrics.getData(DataType.SPEED_STATS)?.average?.times(
-                            3.6) ?: prevExerciseData?.speed // Convert m/s to km/h
+                            3.6
+                        ) ?: prevExerciseData?.speed // Convert m/s to km/h
                     )
                     exerciseDataDao.upsertExerciseData(exerciseData)
                 }

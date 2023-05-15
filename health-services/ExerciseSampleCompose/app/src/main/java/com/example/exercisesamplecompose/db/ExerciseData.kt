@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import java.time.Instant
-import java.time.LocalDateTime
 
 @Entity(tableName = "exercise_data")
 data class ExerciseData(
@@ -17,6 +16,7 @@ data class ExerciseData(
     var longitude: Double? = 0.0,
     var distance: Double? = 0.0,
     var calories: Double? = 0.0,
+    var heartRate: Double? = 0.0,
     var heartRateAvg: Double? = 0.0,
     var steps: Int? = 0,
     var speed: Double? = 0.0,

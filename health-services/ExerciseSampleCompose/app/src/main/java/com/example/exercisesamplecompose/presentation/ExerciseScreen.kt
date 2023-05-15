@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.filled.WatchLater
 import androidx.compose.material.icons.filled._360
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -41,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.health.services.client.data.DataPoint
 import androidx.health.services.client.data.DataType
@@ -67,13 +69,13 @@ import com.example.exercisesamplecompose.presentation.component.formatDistanceKm
 import com.example.exercisesamplecompose.presentation.component.formatElapsedTime
 import com.example.exercisesamplecompose.service.ExerciseStateChange
 import com.example.exercisesamplecompose.theme.ExerciseSampleTheme
-import java.time.Duration
-import kotlin.time.toKotlinDuration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.time.Duration
+import kotlin.time.toKotlinDuration
 
 /**
  * Shows while an exercise is in progress
@@ -99,6 +101,8 @@ fun ExerciseScreen(
             val baseActiveDuration = remember { mutableStateOf(Duration.ZERO) }
             var activeDuration by remember { mutableStateOf(Duration.ZERO) }
             val exerciseStateChange by mutableStateOf(getExerciseServiceState.exerciseStateChange)
+
+            KeepScreenOn()
 
             /** Collect [DataPoint]s from the aggregate and exercise metric flows. Because
              * collectAsStateWithLifecycle() is asynchronous, store the last known value from each flow,
@@ -361,6 +365,17 @@ fun ExerciseScreen(
         }
 
         else -> {}
+    }
+}
+
+@Composable
+fun KeepScreenOn() {
+    val currentView = LocalView.current
+    DisposableEffect(Unit) {
+        currentView.keepScreenOn = true
+        onDispose {
+            currentView.keepScreenOn = false
+        }
     }
 }
 
