@@ -20,4 +20,5 @@ data class ExerciseData(
     var heartRateAvg: Double? = 0.0,
     var steps: Int? = 0,
     var speed: Double? = 0.0,
+    var speedAvg: Double? = 0.0,
 )

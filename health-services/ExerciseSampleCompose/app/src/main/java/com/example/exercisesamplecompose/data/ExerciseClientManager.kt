@@ -93,6 +93,7 @@ class ExerciseClientManager @Inject constructor(
             DataType.DISTANCE_TOTAL,
             DataType.LOCATION,
             DataType.STEPS_TOTAL,
+            DataType.SPEED,
             DataType.SPEED_STATS
         ).intersect(capabilities.supportedDataTypes)
         val exerciseGoals = mutableListOf<ExerciseGoal<Double>>()

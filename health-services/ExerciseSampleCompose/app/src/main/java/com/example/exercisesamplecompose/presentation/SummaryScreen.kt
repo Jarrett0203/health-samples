@@ -127,7 +127,7 @@ fun SummaryScreen(
                 item {
                     SummaryFormat(
                         value = averageSpeed,
-                        metric = stringResource(id = R.string.speed),
+                        metric = stringResource(id = R.string.avgSpeed),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -162,7 +162,7 @@ fun SummaryScreenPreview() {
         totalDistance = "2 km",
         totalCalories = "100",
         totalSteps = "2000",
-        averageSpeed = "5.0",
+        averageSpeed = "5.0km/h",
         elapsedTime = "17m01s",
         onRestartClick = {})
 

@@ -109,7 +109,7 @@ fun ExerciseSampleApp(
                 totalDistance = it.arguments?.getString("totalDistance")!!,
                 totalCalories = it.arguments?.getString("totalCalories")!!,
                 totalSteps = it.arguments?.getString("totalSteps")!!,
-                averageSpeed = it.arguments?.getString("averageSpeed")!!,
+                averageSpeed = "%02.2f".format(it.arguments?.getString("averageSpeed")!!.toDouble() * 3.6) + "km/h",
                 elapsedTime = it.arguments?.getString("elapsedTime")!!,
                 onRestartClick = {
                     navController.navigate(Screens.StartingUp.route) {

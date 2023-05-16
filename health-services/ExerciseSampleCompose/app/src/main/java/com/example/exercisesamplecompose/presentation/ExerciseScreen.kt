@@ -115,6 +115,14 @@ fun ExerciseScreen(
                     ?.last()?.value!!
             else tempHeartRate.value = tempHeartRate.value
 
+            val tempSpeed = remember { mutableStateOf(0.0) }
+            if (exerciseMetrics?.getData(DataType.SPEED)
+                    ?.isNotEmpty() == true
+            ) tempSpeed.value =
+                exerciseMetrics?.getData(DataType.SPEED)
+                    ?.last()?.value!!
+            else tempSpeed.value = tempSpeed.value
+
             /**Store previous calorie and distance values to avoid rendering null values from
              * [getExerciseServiceState] flow**/
             val distance =
@@ -128,8 +136,8 @@ fun ExerciseScreen(
             val steps = exerciseMetrics?.getData(DataType.STEPS_TOTAL)?.total?.toInt()
             val tempSteps = remember { mutableStateOf(0) }
 
-            val speed = exerciseMetrics?.getData(DataType.SPEED_STATS)?.average
-            val tempSpeed = remember { mutableStateOf(0.0) }
+            val averageSpeed = exerciseMetrics?.getData(DataType.SPEED_STATS)?.average
+            val tempAverageSpeed = remember { mutableStateOf(0.0) }
 
             val averageHeartRate =
                 exerciseMetrics?.getData(DataType.HEART_RATE_BPM_STATS)?.average
@@ -260,16 +268,7 @@ fun ExerciseScreen(
                                 imageVector = Icons.Default.Speed,
                                 contentDescription = stringResource(id = R.string.speed)
                             )
-                            if (speed != null) {
-                                SpeedText(
-                                    speed
-                                )
-                                tempSpeed.value = speed
-                            } else {
-                                SpeedText(
-                                    tempSpeed.value
-                                )
-                            }
+                            SpeedText(speed = tempSpeed.value)
                         }
 
                         Row(
@@ -298,6 +297,9 @@ fun ExerciseScreen(
                             if (averageHeartRate != null) {
                                 tempAverageHeartRate.value = averageHeartRate
                             }
+                            if (averageSpeed != null) {
+                                tempAverageSpeed.value = averageSpeed
+                            }
                         }
 
                         Row(
@@ -316,7 +318,7 @@ fun ExerciseScreen(
                                             tempDistance.value
                                         )
                                     }/${formatCalories(tempCalories.value)}/${tempSteps.value}/${
-                                        "%02.2f".format(tempSpeed.value * 3.6)
+                                        tempAverageSpeed.value
                                     }/" + formatElapsedTime(
                                         activeDuration.toKotlinDuration(), true
                                     ).toString()
